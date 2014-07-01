@@ -1,7 +1,6 @@
 import groovy.lang.GString;
 import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
-import org.boon.json.serializers.CustomObjectSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.impl.AbstractCustomObjectSerializer;
 import org.boon.primitive.CharBuf;

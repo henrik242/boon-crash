@@ -10,12 +10,16 @@ task wrapper(type: Wrapper) {
 
 dependencies {
     compile(
-    	"io.fastjson:boon:0.21",
-	"org.codehaus.groovy:groovy-all:2.3.2"
+        "io.fastjson:boon:0.21",
+        "org.codehaus.groovy:groovy-all:2.3.2"
     )
 
     testCompile(
-	"org.spockframework:spock-core:0.7-groovy-2.0"
+        "org.spockframework:spock-core:0.7-groovy-2.0"
     )
+}
+
+test {
+    jvmArgs '-Dorg.boon.faststringutils.disable=true -Dorg.boon.write.to.final.string.fields=false'
 }
 
