@@ -1,8 +1,12 @@
 boon-crash
 ==========
 
+Build with `./gradlew clean build`
+
+Addresses https://github.com/RichardHightower/boon/issues/197
+
 <pre><code>
-✨  gradle build
+✨  ./gradlew clean build
 :compileJava
 Note: /path/to/boon-crash/src/main/java/JsonEncoder.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
