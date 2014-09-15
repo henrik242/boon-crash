@@ -3,39 +3,14 @@ boon-crash
 
 Build with `./gradlew clean build`
 
-Addresses https://github.com/RichardHightower/boon/issues/231
+Addresses https://github.com/RichardHightower/boon/issues/232
 
-I created the following serializer:
+It seems that support for null values in a map is unsupported. Other JSON libraries
+like groovy's internal lib and Gson, will happily create the null value in Json. I am 
+guessing that JsonSerializerFactory().includeNulls() should turn that support on, but I might be wrong...
 
-<code><pre>
-private static class HashCodeSerializer implements CustomObjectSerializer<HashCode> {
-    @Override
-    public Class<HashCode> type() {
-        return HashCode.class;
-    }
-
-    @Override
-    public void serializeObject(JsonSerializerInternal serializer, HashCode instance, CharBuf builder) {
-        serializer.serializeString(instance.toString(), builder);
-    }
-}
-</code></pre>
-
-And I try to serialize the following HashCode:
+If I serialize the following map, I only get {"key":"somevalue"} back:
 
 <code><pre>
-    Hasher hasher = md5().newHasher()
-    hasher.putString("heisann", Charset.defaultCharset())
-    HashCode hash = hasher.hash()
-</code></pre>
-
-Serialization fails since JsonSerializerFactory().addTypeSerializer() requires the type implementation class as
-the first argument, but that's unavailable for us: The created HashCode is actually a BytesHashCode, which is a private class, so org.boon.json.serializers.impl.CustomObjectSerializerImpl#serializeObject is unable to match the class in line 38:
-
-<code><pre>
-    final CustomObjectSerializer customObjectSerializer = overrideMap.get(Boon.cls(obj));
-    if (customObjectSerializer!=null) {
-         customObjectSerializer.serializeObject(jsonSerializer, obj, builder);
-         return;
-    }
+ Map map = [ key: "somevalue", otherkey: null ]
 </code></pre>
