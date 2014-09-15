@@ -10,8 +10,9 @@ task wrapper(type: Wrapper) {
 
 dependencies {
     compile(
-        "io.fastjson:boon:0.21",
-        "org.codehaus.groovy:groovy-all:2.3.2"
+        "com.google.guava:guava:18.0",
+        "io.fastjson:boon:0.26",
+        "org.codehaus.groovy:groovy-all:2.3.6"
     )
 
     testCompile(
@@ -20,6 +21,6 @@ dependencies {
 }
 
 test {
-    jvmArgs '-Dorg.boon.faststringutils.disable=true -Dorg.boon.write.to.final.string.fields=false'
+//    jvmArgs '-Dorg.boon.faststringutils.disable=true -Dorg.boon.write.to.final.string.fields=false'
 }
 
