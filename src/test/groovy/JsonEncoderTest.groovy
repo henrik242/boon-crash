@@ -1,4 +1,5 @@
 import spock.lang.Specification
+import groovy.json.StringEscapeUtils
 
 class JsonEncoderTest extends Specification {
 
@@ -12,18 +13,17 @@ class JsonEncoderTest extends Specification {
     }
 
     /**
-     * Other JSON libraries, like groovy's internal lib and Gson, will happily create the
-     * null value in Json.  I am guessing that JsonSerializerFactory().includeNulls() should
-     * support this, but I might be wrong...
+     * Other JSON libraries, like groovy's internal lib, escapes non-ascii
+     * characters.  Somehow boon doesn't.
      */
-    def "should serialize maps with null values"() {
+    def "should encode non-ascii values"() {
       given:
-        Map map = [ key: "sometext", nullkey: null ]
+        String stuff = "heiæøå"
 
       when:
-        String result = JsonEncoder.toJson(map)
+        String result = JsonEncoder.toJson(stuff)
 
       then:
-        result == '{"key":"sometext","nullkey":null}'
+        result == '"hei\\\\u00E6\\\\u00F8\\\\u00E5"'
     }
 }
