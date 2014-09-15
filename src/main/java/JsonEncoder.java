@@ -17,6 +17,7 @@ public final class JsonEncoder {
 
     private static JsonSerializer createSerializer() {
         JsonSerializerFactory factory = new JsonSerializerFactory()
+                .includeNulls()
                 .addTypeSerializer(HashCode.class, new HashCodeSerializer())
                 .addTypeSerializer(GStringImpl.class, new GStringSerializer());
         return factory.create();
