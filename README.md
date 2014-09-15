@@ -3,53 +3,39 @@ boon-crash
 
 Build with `./gradlew clean build`
 
-Addresses https://github.com/RichardHightower/boon/issues/197
+Addresses https://github.com/RichardHightower/boon/issues/231
 
-<pre><code>
-✨  ./gradlew clean build
-:compileJava
-Note: /path/to/boon-crash/src/main/java/JsonEncoder.java uses unchecked or unsafe operations.
-Note: Recompile with -Xlint:unchecked for details.
-:compileGroovy UP-TO-DATE
-:processResources UP-TO-DATE
-:classes
-:jar
-:assemble
-:compileTestJava UP-TO-DATE
-:compileTestGroovy
-:processTestResources UP-TO-DATE
-:testClasses
-:test
-#
-# A fatal error has been detected by the Java Runtime Environment:
-#
-#  SIGSEGV (0xb) at pc=0x0000000103070452, pid=12753, tid=22275
-#
-# JRE version: Java(TM) SE Runtime Environment (7.0_55-b13) (build 1.7.0_55-b13)
-# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.55-b03 mixed mode bsd-amd64 compressed oops)
-# Problematic frame:
-# j  org.boon.json.serializers.impl.InstanceSerializerImpl.serializeSubtypeInstance(Lorg/boon/json/serializers/JsonSerializerInternal;Ljava/lang/Object;Lorg/boon/primitive/CharBuf;)V+9
-#
-# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
-#
-# An error report file with more information is saved as:
-# /path/to/boon-crash/hs_err_pid12753.log
-#
-# If you would like to submit a bug report, please visit:
-#   http://bugreport.sun.com/bugreport/crash.jsp
-#
-:test FAILED
+I created the following serializer:
 
-FAILURE: Build failed with an exception.
+<code><pre>
+private static class HashCodeSerializer implements CustomObjectSerializer<HashCode> {
+    @Override
+    public Class<HashCode> type() {
+        return HashCode.class;
+    }
 
-* What went wrong:
-Execution failed for task ':test'.
-> Process 'Gradle Test Executor 2' finished with non-zero exit value 134
+    @Override
+    public void serializeObject(JsonSerializerInternal serializer, HashCode instance, CharBuf builder) {
+        serializer.serializeString(instance.toString(), builder);
+    }
+}
+</code></pre>
 
-* Try:
-Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+And I try to serialize the following HashCode:
 
-BUILD FAILED
+<code><pre>
+    Hasher hasher = md5().newHasher()
+    hasher.putString("heisann", Charset.defaultCharset())
+    HashCode hash = hasher.hash()
+</code></pre>
 
-Total time: 6.375 secs
+Serialization fails since JsonSerializerFactory().addTypeSerializer() requires the type implementation class as
+the first argument, but that's unavailable for us: The created HashCode is actually a BytesHashCode, which is a private class, so org.boon.json.serializers.impl.CustomObjectSerializerImpl#serializeObject is unable to match the class in line 38:
+
+<code><pre>
+    final CustomObjectSerializer customObjectSerializer = overrideMap.get(Boon.cls(obj));
+    if (customObjectSerializer!=null) {
+         customObjectSerializer.serializeObject(jsonSerializer, obj, builder);
+         return;
+    }
 </code></pre>
