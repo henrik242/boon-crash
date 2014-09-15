@@ -1,5 +1,6 @@
 import java.nio.charset.Charset
 
+import com.google.common.hash.HashCode
 import com.google.common.hash.Hasher
 import spock.lang.Specification
 
@@ -25,7 +26,7 @@ class JsonEncoderTest extends Specification {
       given:
         Hasher hasher = md5().newHasher()
         hasher.putString("heisann", Charset.defaultCharset())
-        def hash = hasher.hash()
+        HashCode hash = hasher.hash()
 
       when:
         String actualJson = JsonEncoder.toJson(hash)
