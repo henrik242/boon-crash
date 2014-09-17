@@ -11,6 +11,7 @@ public final class MapSerializer extends AbstractCustomObjectSerializer<Map> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void serializeObject(JsonSerializerInternal serializer, Map instance, CharBuf builder) {
         serializer.serializeMap(instance, builder);
     }
