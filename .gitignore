@@ -3,3 +3,5 @@ build/
 .idea
 *.log
 *.iml
+*.ipr
+*.iws
