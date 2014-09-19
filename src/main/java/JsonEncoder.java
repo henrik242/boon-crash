@@ -18,7 +18,7 @@ public final class JsonEncoder {
     private static JsonSerializer createJsonSerializer() {
         JsonSerializerFactory jsonSerializerFactory = new JsonSerializerFactory()
                 .includeNulls()
-                .setEncodeStrings(true)
+                .asciiOnly()
                 .addTypeSerializer(GString.class, new StringSerializer())
                 .addTypeSerializer(AbstractList.class, new ListSerializer())  // e.g. groovyx.gpars.extra166y.ParallelArray$AsList
                 .addTypeSerializer(AbstractMap.class, new MapSerializer())    // e.g. groovy.json.internal.LazyMap

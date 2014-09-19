@@ -92,14 +92,14 @@ class JsonEncoderTest extends Specification {
 
     def "should encode non-ascii values"() {
       given:
-        def factory = jsf.setEncodeStrings(true)
+        def factory = jsf.asciiOnly()
         def stuff = "heiæøå"
 
       when:
         def result = toJson(factory, stuff)
 
       then:
-        result == '"hei\\u00E6\\u00F8\\u00E5"'
+        result == '"hei\\u00e6\\u00f8\\u00e5"'
     }
 
     def "should serialize HashCode correctly"() {
