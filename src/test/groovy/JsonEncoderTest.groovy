@@ -1,6 +1,8 @@
 import java.nio.charset.Charset
 
+import com.google.common.base.Predicate
 import com.google.common.collect.ImmutableMap
+import com.google.common.collect.Maps
 import com.google.common.hash.HashCode
 import groovy.json.internal.LazyMap
 import groovyx.gpars.extra166y.ParallelArray
@@ -115,6 +117,27 @@ class JsonEncoderTest extends Specification {
       then:
         hash.getClass().simpleName == "BytesHashCode"
         result == '"86c7c929d73e1d91c268c9f18d121212"'
+    }
+
+    def "should serialize guava FilteredKeyMap"() {
+      given:
+        def factory = jsf.addTypeSerializer(AbstractMap.class, new MapSerializer())
+        Map<String, String> map = [ Aaaaa: "aaaa", Bbbbb: "bbbb", Ccccc: "cccc" ]
+        Predicate<String> startsWithB = new Predicate<String>() {
+            @Override
+            boolean apply(String s) {
+                return s.charAt(0) == "B"
+            }
+        }
+
+      when:
+        Map<String, String> filtered = Maps.filterKeys(map, startsWithB)
+        def result = toJson(factory, filtered)
+
+      then:
+        filtered.getClass().simpleName == "FilteredKeyMap"
+        result == "{\"Bbbbb\":\"bbbb\"}"
+
     }
 
     private static String toJson(JsonSerializerFactory factory, Object obj) {

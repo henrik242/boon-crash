@@ -13,3 +13,5 @@ Addresses several boon issues:
 - https://github.com/RichardHightower/boon/issues/234 (escape utf-8)
 - https://github.com/RichardHightower/boon/issues/241 (avoid nullpointerexception)
 - https://github.com/RichardHightower/boon/issues/242 (superclass serializer)
+- https://github.com/RichardHightower/boon/issues/247 (serialize filteredkeymap)
+
